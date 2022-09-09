@@ -9,6 +9,7 @@
     >
     <hr />
     <TodoSimpleForm @add-todo="addTodo" />
+    <div style="color: red">{{error}}</div>
 
     <div v-if="!filteredTodos.length">
       There is nothing to display
@@ -25,6 +26,7 @@
   import { ref, computed } from "vue";
   import TodoSimpleForm from "@/components/TodoSimpleForm";
   import TodoList from "@/components/TodoList";
+  import axios from 'axios';
 
   export default {
     components: {
@@ -34,18 +36,70 @@
     setup() {
 
       const todos = ref([]);
+      const error = ref('');
 
-      const addTodo = (todo) => {
-        todos.value.push(todo);
+      const getTodos = async () => {
+        try {
+          const res = await axios.get('http://localhost:3000/todos');
+          todos.value = res.data;
 
+        } catch (err) {
+          error.value = 'Something went wrong.';
+        }
+      }
+
+      getTodos();
+
+      const addTodo = async (todo) => {
+        error.value = '';
+
+        try {
+          const res = await axios.post('http://localhost:3000/todos', {
+            subject: todo.subject,
+            completed: todo.completed,
+          });
+
+          todos.value.push(res.data);
+        } catch (err) {
+          error.value = 'Something went wrong.';
+        }
+
+        // axios.post('http://localhost:3000/todos', {
+        //   subject: todo.subject,
+        //   computed: todo.completed,
+        // }).then(res => {
+        //   todos.value.push(res.data);
+        // }).catch(err => {
+        //   console.log(err);
+        //   error.value = 'Something went wrong.';
+        // });
       };
 
-      const deleteTodo = (index) => {
-        todos.value.splice(index, 1);
+      const deleteTodo = async (index) => {
+        error.value = '';
+        const id = todos.value[index].id;
+
+        try {
+          await axios.delete('http://localhost:3000/todos/'+id);
+          todos.value.splice(index, 1);
+        } catch (err) {
+          error.value = 'Something went wrong.';
+        }
       };
 
-      const toggleTodo = (index) => {
-        todos.value[index].completed = !todos.value[index].completed;
+      const toggleTodo = async (index) => {
+        error.value = '';
+        const id = todos.value[index].id;
+
+        try {
+          await axios.patch('http://localhost:3000/todos/'+id, {
+            completed: !todos.value[index].completed
+          });
+          todos.value[index].completed = !todos.value[index].completed;
+        } catch (err) {
+          error.value = 'Something went wrong.';
+        }
+
       };
 
       const searchText = ref("");
@@ -64,7 +118,8 @@
         toggleTodo,
         deleteTodo,
         searchText,
-        filteredTodos
+        filteredTodos,
+        error,
       };
 
     }
