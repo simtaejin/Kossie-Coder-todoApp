@@ -43,19 +43,25 @@
         </li>
       </ul>
     </nav>
-
   </div>
+  <Toast v-if="showToast"
+         :message="toastMessage"
+         :type="toastAlertType"
+  />
 </template>
 <script>
 import { ref, computed, watch } from "vue";
 import TodoSimpleForm from "@/components/TodoSimpleForm";
 import TodoList from "@/components/TodoList";
 import axios from 'axios';
+import Toast from "@/components/Toast";
+import { useToast } from "@/domposables/toast";
 
 export default {
   components: {
     TodoSimpleForm,
-    TodoList
+    TodoList,
+    Toast,
   },
   setup() {
 
@@ -70,6 +76,14 @@ export default {
       return Math.ceil(numberOfTodos.value/limit);
     })
 
+    const {
+      toastMessage,
+      toastAlertType,
+      showToast,
+      triggerToast,
+    } = useToast();
+
+
     const getTodos = async (page = currentPage.value) => {
       currentPage.value = page;
       try {
@@ -78,7 +92,7 @@ export default {
         todos.value = res.data;
 
       } catch (err) {
-        error.value = 'Something went wrong.';
+        triggerToast('Something went wrong.', 'danger');
       }
     }
 
@@ -95,7 +109,7 @@ export default {
 
         getTodos(1);
       } catch (err) {
-        error.value = 'Something went wrong.';
+        triggerToast('Something went wrong.', 'danger');
       }
 
       // axios.post('http://localhost:3000/todos', {
@@ -105,7 +119,7 @@ export default {
       //   todos.value.push(res.data);
       // }).catch(err => {
       //   console.log(err);
-      //   error.value = 'Something went wrong.';
+      //   triggerToast('Something went wrong.', 'danger');
       // });
     };
 
@@ -118,7 +132,7 @@ export default {
 
         getTodos(1);
       } catch (err) {
-        error.value = 'Something went wrong.';
+        triggerToast('Something went wrong.', 'danger');
       }
     };
 
@@ -132,7 +146,7 @@ export default {
         });
         todos.value[index].completed = checked;
       } catch (err) {
-        error.value = 'Something went wrong.';
+        triggerToast('Something went wrong.', 'danger');
       }
 
     };
@@ -160,6 +174,7 @@ export default {
     //   return todos.value;
     // })
 
+
     return {
       searchTodo,
       todos,
@@ -172,6 +187,10 @@ export default {
       numberOfPages,
       currentPage,
       getTodos,
+      showToast,
+      toastMessage,
+      toastAlertType,
+      triggerToast,
     };
 
   }
