@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+
   <div>
     <div class="d-flex justify-content-between mb-3">
       <h2>To-Do List</h2>
@@ -68,7 +68,6 @@ import { useRouter } from "vue-router";
 
 export default {
   components: {
-
     TodoList,
     Toast,
   },
@@ -132,9 +131,8 @@ export default {
       // });
     };
 
-    const deleteTodo = async (index) => {
+    const deleteTodo = async (id) => {
       error.value = '';
-      const id = todos.value[index].id;
 
       try {
         await axios.delete('http://localhost:3000/todos/'+id);

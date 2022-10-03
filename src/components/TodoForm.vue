@@ -14,7 +14,7 @@
           <input v-model="todo.subject" type="text" class="form-control">
           <div
               v-if="subjectError"
-              style="color:red"
+              class="text-red"
           >{{subjectError}}</div>
         </div>
 
@@ -58,10 +58,12 @@
       Cancel
     </button>
   </form>
-  <Toast v-if="showToast"
-         :message="toastMessage"
-         :type="toastAlertType"
-  />
+  <transition name="fade">
+    <Toast v-if="showToast"
+           :message="toastMessage"
+           :type="toastAlertType"
+    />
+  </transition>
 </template>
 
 <script>
@@ -148,7 +150,6 @@ export default {
           return;
         }
 
-
         let res;
         const data = {
           subject: todo.value.subject,
@@ -164,7 +165,6 @@ export default {
           todo.value.subject = '';
           todo.value.body = '';
         }
-
 
         const message = 'Succesfully '+ (props.editing ? 'Updated!!' : 'Created!!');
         triggerToast(message);
@@ -197,5 +197,24 @@ export default {
 </script>
 
 <style scoped>
+  .text-red {
+    color: red;
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.5s ease;
+  }
+
+  .fade-leave-from,
+  .fade-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  .fade-enter-to,
+  .fade-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 
 </style>
