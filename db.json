@@ -37,23 +37,13 @@
     },
     {
       "subject": "8888888",
-      "completed": false,
+      "completed": true,
       "id": 8
     },
     {
       "subject": "91",
       "completed": false,
       "id": 9
-    },
-    {
-      "subject": "10",
-      "completed": true,
-      "id": 10
-    },
-    {
-      "subject": "123123!!!",
-      "completed": false,
-      "id": 11
     },
     {
       "subject": "buy fasdf",
@@ -69,7 +59,7 @@
     },
     {
       "subject": "fasdfs",
-      "completed": false,
+      "completed": true,
       "body": "fsdfadf",
       "id": 16
     }

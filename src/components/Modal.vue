@@ -5,7 +5,6 @@
         <div class="modal-header">
           <h5 class="modal-title">
             <slot name="title"></slot>
-
           </h5>
           <button type="button" class="close">
             <span @click="onClose">&times;</span>
@@ -13,7 +12,6 @@
         </div>
         <div class="modal-body">
           <slot name="body"></slot>
-
         </div>
         <div class="modal-footer">
           <slot name="footer"></slot>

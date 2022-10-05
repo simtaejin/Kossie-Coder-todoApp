@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <div class="d-flex justify-content-between mb-3">
       <h2>To-Do List</h2>
@@ -61,7 +60,7 @@
 import { ref, computed, watch } from "vue";
 
 import TodoList from "@/components/TodoList";
-import axios from 'axios';
+import axios from '@/axios';
 import Toast from "@/components/Toast";
 import { useToast } from "@/domposables/toast";
 import { useRouter } from "vue-router";
@@ -95,7 +94,7 @@ export default {
     const getTodos = async (page = currentPage.value) => {
       currentPage.value = page;
       try {
-        const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
+        const res = await axios.get(`todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
         numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
 
@@ -110,7 +109,7 @@ export default {
       error.value = '';
 
       try {
-        await axios.post('http://localhost:3000/todos', {
+        await axios.post('todos', {
           subject: todo.subject,
           completed: todo.completed,
         });
@@ -120,7 +119,7 @@ export default {
         triggerToast('Something went wrong.', 'danger');
       }
 
-      // axios.post('http://localhost:3000/todos', {
+      // axios.post('todos', {
       //   subject: todo.subject,
       //   computed: todo.completed,
       // }).then(res => {
@@ -135,7 +134,7 @@ export default {
       error.value = '';
 
       try {
-        await axios.delete('http://localhost:3000/todos/'+id);
+        await axios.delete('todos/'+id);
 
         getTodos(1);
       } catch (err) {
@@ -148,7 +147,7 @@ export default {
       const id = todos.value[index].id;
 
       try {
-        await axios.patch('http://localhost:3000/todos/'+id, {
+        await axios.patch('todos/'+id, {
           completed: checked
         });
         todos.value[index].completed = checked;

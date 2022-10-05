@@ -9,15 +9,21 @@
 
     <div class="row">
       <div class="col-6">
-        <div class="form-group">
-          <label>Subject</label>
-          <input v-model="todo.subject" type="text" class="form-control">
-          <div
-              v-if="subjectError"
-              class="text-red"
-          >{{subjectError}}</div>
-        </div>
 
+<!--        <div class="form-group">-->
+<!--          <label>Subject</label>-->
+<!--          <input v-model="todo.subject" type="text" class="form-control">-->
+<!--          <div-->
+<!--              v-if="subjectError"-->
+<!--              class="text-red"-->
+<!--          >{{subjectError}}</div>-->
+<!--        </div>-->
+
+        <Input
+            label="Subject"
+            v-model:subject="todo.subject"
+            :error="subjectError"
+        />
       </div>
 
       <div v-if="editing" class="col-6" >
@@ -68,16 +74,17 @@
 
 <script>
 import  { useRoute, useRouter } from 'vue-router';
-import axios from "axios";
+import axios from "@/axios";
 import { ref, computed } from 'vue';
 import _ from 'lodash';
 import Toast from "@/components/Toast";
 import {useToast} from "@/domposables/toast";
-
+import Input from "@/components/Input";
 
 export default {
   components: {
-    Toast
+    Toast,
+    Input,
   },
   props: {
     editing: {
@@ -96,6 +103,7 @@ export default {
       completed: false,
       body: '',
     });
+
     const subjectError = ref('');
     const originalTodo = ref(null);
     const loading = ref(false);
@@ -108,11 +116,12 @@ export default {
       triggerToast,
     } = useToast();
 
+
     const getTodo =  async () => {
       loading.value = true;
 
       try {
-        const res = await axios.get(`http://localhost:3000/todos/${todoId}`);
+        const res = await axios.get(`todos/${todoId}`);
 
         todo.value = { ...res.data };
         originalTodo.value = { ...res.data };
@@ -157,11 +166,11 @@ export default {
           body: todo.value.body,
         }
         if (props.editing) {
-          res = await axios.put(`http://localhost:3000/todos/${todoId}`, data);
+          res = await axios.put(`todos/${todoId}`, data);
           originalTodo.value = {...res.data};
 
         } else {
-          res = await axios.post(`http://localhost:3000/todos`, data);
+          res = await axios.post(`todos`, data);
           todo.value.subject = '';
           todo.value.body = '';
         }
@@ -197,9 +206,7 @@ export default {
 </script>
 
 <style scoped>
-  .text-red {
-    color: red;
-  }
+
   .fade-enter-active,
   .fade-leave-active {
     transition: all 0.5s ease;
