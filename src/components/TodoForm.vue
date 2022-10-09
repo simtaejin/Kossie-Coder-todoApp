@@ -64,12 +64,7 @@
       Cancel
     </button>
   </form>
-  <transition name="fade">
-    <Toast v-if="showToast"
-           :message="toastMessage"
-           :type="toastAlertType"
-    />
-  </transition>
+
 </template>
 
 <script>
@@ -77,13 +72,12 @@ import  { useRoute, useRouter } from 'vue-router';
 import axios from "@/axios";
 import { ref, computed } from 'vue';
 import _ from 'lodash';
-import Toast from "@/components/Toast";
 import {useToast} from "@/domposables/toast";
 import Input from "@/components/Input";
 
 export default {
   components: {
-    Toast,
+
     Input,
   },
   props: {
@@ -177,6 +171,12 @@ export default {
 
         const message = 'Succesfully '+ (props.editing ? 'Updated!!' : 'Created!!');
         triggerToast(message);
+
+        if (!props.editing) {
+          router.push({
+            name: 'Todos'
+          })
+        }
 
         console.log(res)
       } catch (error) {

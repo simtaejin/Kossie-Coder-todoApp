@@ -13,12 +13,20 @@
   <div class="container">
     <router-view />
   </div>
+  <transition name="slide">
+      <Toast />
+  </transition>
+
 
 </template>
 
 <script>
-  export default {
+  import Toast from '@/components/Toast';
 
+  export default {
+    components : {
+      Toast
+    },
   }
 </script>
 
